@@ -6,10 +6,11 @@ import {
   DialogActions,
   TextField,
   Box,
-} from "@mui/material";
-import { usePortfolioContext } from "../../context/projectsContext";
-import { usePortfolio } from "../../hooks/usePortfolio";
-import { useDropzone } from "react-dropzone";
+} from '@mui/material';
+import { usePortfolioContext } from '../../context/projectsContext';
+import { usePortfolio } from '../../hooks/usePortfolio';
+import { useDropzone } from 'react-dropzone';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function PortfolioForm() {
   const {
@@ -27,16 +28,11 @@ export default function PortfolioForm() {
 
   const { addProject, editProject, uploadToSupabase } = usePortfolio();
 
-  console.log(formData)
-  console.log(droppedImage)
-  console.log(droppedHoverImage)
-
   const handleFormChange = (e) => {
-    if (e.target.name === "title") {
+    if (e.target.name === 'title') {
       setFormData((prevState) => ({
         ...prevState,
         title: e.target.value,
-        imageKey: String(e.target.value).toLowerCase().replace(" ", "-"),
       }));
       return;
     }
@@ -46,27 +42,42 @@ export default function PortfolioForm() {
     }));
   };
 
-  const handleSubmit = async () => {
-    if (editPressed) {
-      editProject (formData);
-    } else {
-      addProject(formData);
-    }
+  const resetForm = () => {
+    setDroppedImage('');
+    setDroppedHoverImage('');
+    handleClose();
+    clearFormData();
+  };
+
+  const handleCreateProject = async () => {
+    const imageKey = uuidv4();
+    addProject({
+      ...formData,
+      imageKey,
+    });
+    uploadToSupabase([
+      { name: imageKey, file: droppedImage },
+      { name: `${imageKey}-hover`, file: droppedHoverImage },
+    ]);
+
+    resetForm();
+  };
+
+  const handleEditProject = async () => {
+    editProject(formData);
     uploadToSupabase([
       { name: formData.imageKey, file: droppedImage },
       { name: `${formData.imageKey}-hover`, file: droppedHoverImage },
     ]);
-    setDroppedImage("");
-    setDroppedHoverImage("");
-    handleClose();
-    clearFormData();
+
+    resetForm();
   };
 
   // Dropzone Config begins
 
   const { getRootProps: getRootMainProps, getInputProps: getInputMainProps } =
     useDropzone({
-      "image/*": [".png", ".jpeg", ".jpg"],
+      'image/*': ['.png', '.jpeg', '.jpg'],
       onDrop: (acceptedFile) => {
         setDroppedImage(
           Object.assign(acceptedFile[0], {
@@ -78,7 +89,7 @@ export default function PortfolioForm() {
 
   const { getRootProps: getRootHoverProps, getInputProps: getInputHoverProps } =
     useDropzone({
-      "image/*": [".png", ".jpeg", ".jpg"],
+      'image/*': ['.png', '.jpeg', '.jpg'],
       onDrop: (acceptedFile) => {
         setDroppedHoverImage(
           Object.assign(acceptedFile[0], {
@@ -90,11 +101,12 @@ export default function PortfolioForm() {
 
   // Dropzone Config ends
 
-  console.log(editPressed);
   return (
     <>
       <Dialog open={open}>
-        <DialogTitle>{editPressed ? "Edit Project" : "Add Project"}</DialogTitle>
+        <DialogTitle>
+          {editPressed ? 'Edit Project' : 'Add Project'}
+        </DialogTitle>
         <DialogContent>
           <form>
             <TextField
@@ -135,18 +147,18 @@ export default function PortfolioForm() {
             />
             <Box
               sx={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1rem",
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '1rem',
               }}
             >
               <Box
                 component="span"
-                sx={{ p: 2, border: "1px dashed grey" }}
-                {...getRootMainProps({ className: "dropzone" })}
+                sx={{ p: 2, border: '1px dashed grey' }}
+                {...getRootMainProps({ className: 'dropzone' })}
               >
                 <input {...getInputMainProps()} />
-                {!droppedImage.preview && formData.mainImage === "" ? (
+                {!droppedImage.preview && formData.mainImage === '' ? (
                   <>
                     <p>
                       Drag 'n' drop your main image here, or click to select
@@ -168,11 +180,11 @@ export default function PortfolioForm() {
               </Box>
               <Box
                 component="span"
-                sx={{ p: 2, border: "1px dashed grey" }}
-                {...getRootHoverProps({ className: "dropzone" })}
+                sx={{ p: 2, border: '1px dashed grey' }}
+                {...getRootHoverProps({ className: 'dropzone' })}
               >
                 <input {...getInputHoverProps()} />
-                {!droppedHoverImage.preview && formData.hoverImage === "" ? (
+                {!droppedHoverImage.preview && formData.hoverImage === '' ? (
                   <>
                     <p>
                       Drag 'n' drop your hover image here, or click to select
@@ -197,7 +209,13 @@ export default function PortfolioForm() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleClose()}>Cancel</Button>
-          <Button onClick={() => handleSubmit()}>{editPressed ? "Edit" : "Add"}</Button>
+          <Button
+            onClick={() =>
+              editPressed ? handleEditProject() : handleCreateProject()
+            }
+          >
+            {editPressed ? 'Edit' : 'Add'}
+          </Button>
         </DialogActions>
       </Dialog>
     </>
