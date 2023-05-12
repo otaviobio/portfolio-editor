@@ -5,6 +5,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import styles from "../../../styles/ProjectsTable.scss"
 import { Button } from "@mui/material";
 import { usePortfolioContext } from "../../context/projectsContext";
 
@@ -44,7 +45,7 @@ function ProjectsTable({ projectData }) {
   // );
 
   return (
-    <>
+    <main className={styles.container}>
       <Button variant="contained" onClick={() => handleOpenModal()}>
         Add Project
       </Button>
@@ -86,7 +87,7 @@ function ProjectsTable({ projectData }) {
           </TableBody>
         </Table>
       </TableContainer>
-    </>
+    </main>
   );
 }
 
