@@ -1,12 +1,26 @@
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { Button } from "@mui/material";
-import { usePortfolioContext } from "../../context/projectsContext";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+} from '@mui/material';
+import { usePortfolioContext } from '../../context/projectsContext';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { useState } from 'react';
+import { usePortfolio } from '../../hooks/usePortfolio';
 
 // function createData(title, desc, link, category, imageKey) {
 //   return { title, desc, link, category, imageKey };
@@ -14,9 +28,15 @@ import { usePortfolioContext } from "../../context/projectsContext";
 
 function ProjectsTable({ projectData }) {
   const { openModal, setFormData, setEditPressed } = usePortfolioContext();
+  const [confirmDialog, setConfirmDialog] = useState({
+    isOpen: false,
+    selectedId: null,
+  });
+
+  const { deleteProjectById, isLoading } = usePortfolio();
 
   function handleOpenModal(project) {
-    if (project && project.id != "") {
+    if (project && project.id != '') {
       setFormData({
         title: project.title,
         desc: project.desc,
@@ -26,7 +46,7 @@ function ProjectsTable({ projectData }) {
         id: project.id,
         // these last two are just to show the images on react-dropzone
         mainImage: project.image,
-        hoverImage: project.hoverImage
+        hoverImage: project.hoverImage,
       });
       setEditPressed(true);
     }
@@ -56,7 +76,7 @@ function ProjectsTable({ projectData }) {
               <TableCell align="left">Description</TableCell>
               <TableCell align="left">Link</TableCell>
               <TableCell align="left">Category</TableCell>
-              <TableCell align="left">Image Key</TableCell>
+              {/* <TableCell align="left">Image Key</TableCell> */}
               <TableCell align="left">Action</TableCell>
             </TableRow>
           </TableHead>
@@ -64,7 +84,7 @@ function ProjectsTable({ projectData }) {
             {projectData.map((row) => (
               <TableRow
                 key={row.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
                   {row.title}
@@ -74,18 +94,66 @@ function ProjectsTable({ projectData }) {
                 <TableCell align="left">{row.category}</TableCell>
                 <TableCell align="left">{row.imageKey}</TableCell>
                 <TableCell align="left">
-                  <Button
-                    variant="contained"
-                    onClick={() => handleOpenModal(row)}
-                  >
-                    Edit
-                  </Button>
+                  <Box sx={{ display: 'flex', gap: '5px' }}>
+                    <IconButton
+                      color="warning"
+                      variant="contained"
+                      onClick={() => handleOpenModal(row)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      color="error"
+                      onClick={() => {
+                        setConfirmDialog({
+                          isOpen: true,
+                          selectedId: row.id,
+                        });
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Dialog
+        open={confirmDialog.isOpen}
+        onClose={() => setConfirmDialog({ isOpen: false, selectedId: null })}
+      >
+        <DialogTitle>Are you sure you want to delete this project?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>This action cannot be undone.</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            disabled={isLoading}
+            variant="contained"
+            color="primary"
+            onClick={() =>
+              setConfirmDialog({ isOpen: false, selectedId: null })
+            }
+          >
+            Cancel
+          </Button>
+          <LoadingButton
+            loading={isLoading}
+            variant="outlined"
+            color="error"
+            autoFocus
+            onClick={async () => {
+              await deleteProjectById(confirmDialog.selectedId);
+              setConfirmDialog({ isOpen: false, selectedId: null });
+            }}
+          >
+            Delete
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
