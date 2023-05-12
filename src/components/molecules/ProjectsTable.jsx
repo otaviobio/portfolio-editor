@@ -1,3 +1,4 @@
+
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -22,9 +23,9 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { useState } from 'react';
 import { usePortfolio } from '../../hooks/usePortfolio';
 
-// function createData(title, desc, link, category, imageKey) {
-//   return { title, desc, link, category, imageKey };
-// }
+// import styles from "../../../styles/ProjectsTable.scss"
+
+
 
 function ProjectsTable({ projectData }) {
   const { openModal, setFormData, setEditPressed } = usePortfolioContext();
@@ -53,18 +54,8 @@ function ProjectsTable({ projectData }) {
     openModal();
   }
 
-  // const rows = projectData.map((project) =>
-  //   createData(
-  //     project.title,
-  //     project.desc,
-  //     project.link,
-  //     project.category,
-  //     project.imageKey
-  //   )
-  // );
-
   return (
-    <>
+    <main className={''}>
       <Button variant="contained" onClick={() => handleOpenModal()}>
         Add Project
       </Button>
@@ -154,7 +145,8 @@ function ProjectsTable({ projectData }) {
           </LoadingButton>
         </DialogActions>
       </Dialog>
-    </>
+
+    </main>
   );
 }
 
