@@ -66,6 +66,8 @@ export function usePortfolio() {
       .delete()
       .eq('id', id);
 
+    // console.log({storageData, storageError})
+
     if (selectError) {
       console.error({
         selectError,

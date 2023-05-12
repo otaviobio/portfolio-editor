@@ -52,7 +52,7 @@ function ProjectsTable({ projectData }) {
   }
 
   return (
-    <main className={''}>
+    <main style={{padding: "50px"}}>
       <Button variant="contained" onClick={() => handleOpenModal()}>
         Add Project
       </Button>
@@ -64,6 +64,7 @@ function ProjectsTable({ projectData }) {
               <TableCell align="left">Description</TableCell>
               <TableCell align="left">Link</TableCell>
               <TableCell align="left">Category</TableCell>
+              <TableCell align="left">Image Key</TableCell>
               <TableCell align="left">Action</TableCell>
             </TableRow>
           </TableHead>
