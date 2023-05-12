@@ -1,26 +1,13 @@
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  IconButton,
-} from '@mui/material';
-import { usePortfolioContext } from '../../context/projectsContext';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import LoadingButton from '@mui/lab/LoadingButton';
-import { useState } from 'react';
-import { usePortfolio } from '../../hooks/usePortfolio';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import styles from "../../../styles/ProjectsTable.scss"
+import { Button } from "@mui/material";
+import { usePortfolioContext } from "../../context/projectsContext";
 
 // function createData(title, desc, link, category, imageKey) {
 //   return { title, desc, link, category, imageKey };
@@ -64,7 +51,7 @@ function ProjectsTable({ projectData }) {
   // );
 
   return (
-    <>
+    <main className={styles.container}>
       <Button variant="contained" onClick={() => handleOpenModal()}>
         Add Project
       </Button>
@@ -154,7 +141,7 @@ function ProjectsTable({ projectData }) {
           </LoadingButton>
         </DialogActions>
       </Dialog>
-    </>
+    </main>
   );
 }
 
