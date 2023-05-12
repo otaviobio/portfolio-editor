@@ -5,13 +5,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import styles from "../../../styles/ProjectsTable.scss"
-import { Button } from "@mui/material";
+import Box from "@mui/material/Box";
+// import styles from "../../../styles/ProjectsTable.scss"
+import { Button, IconButton } from "@mui/material";
 import { usePortfolioContext } from "../../context/projectsContext";
-
-// function createData(title, desc, link, category, imageKey) {
-//   return { title, desc, link, category, imageKey };
-// }
+import { useState } from "react";
+import { usePortfolio } from "../../hooks/usePortfolio";
 
 function ProjectsTable({ projectData }) {
   const { openModal, setFormData, setEditPressed } = usePortfolioContext();
@@ -40,18 +39,8 @@ function ProjectsTable({ projectData }) {
     openModal();
   }
 
-  // const rows = projectData.map((project) =>
-  //   createData(
-  //     project.title,
-  //     project.desc,
-  //     project.link,
-  //     project.category,
-  //     project.imageKey
-  //   )
-  // );
-
   return (
-    <main className={styles.container}>
+    <main>
       <Button variant="contained" onClick={() => handleOpenModal()}>
         Add Project
       </Button>
