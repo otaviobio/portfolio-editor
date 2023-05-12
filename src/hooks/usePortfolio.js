@@ -58,7 +58,7 @@ export function usePortfolio() {
       .eq('id', id);
 
     const { data: storageData, error: storageError } = await supabase.storage
-      .from('avatars')
+      .from('portfolio-images')
       .remove([data.imageKey, `${data.imageKey}-hover`]);
 
     const { error: deleteError } = await supabase

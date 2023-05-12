@@ -1,16 +1,28 @@
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+} from '@mui/material';
+import { usePortfolioContext } from '../../context/projectsContext';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { useState } from 'react';
+import { usePortfolio } from '../../hooks/usePortfolio';
+
 // import styles from "../../../styles/ProjectsTable.scss"
-import { Button, IconButton } from "@mui/material";
-import { usePortfolioContext } from "../../context/projectsContext";
-import { useState } from "react";
-import { usePortfolio } from "../../hooks/usePortfolio";
 
 function ProjectsTable({ projectData }) {
   const { openModal, setFormData, setEditPressed } = usePortfolioContext();
@@ -40,7 +52,7 @@ function ProjectsTable({ projectData }) {
   }
 
   return (
-    <main>
+    <main className={''}>
       <Button variant="contained" onClick={() => handleOpenModal()}>
         Add Project
       </Button>
@@ -52,7 +64,6 @@ function ProjectsTable({ projectData }) {
               <TableCell align="left">Description</TableCell>
               <TableCell align="left">Link</TableCell>
               <TableCell align="left">Category</TableCell>
-              {/* <TableCell align="left">Image Key</TableCell> */}
               <TableCell align="left">Action</TableCell>
             </TableRow>
           </TableHead>
