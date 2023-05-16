@@ -22,8 +22,6 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { useState } from 'react';
 import { usePortfolio } from '../../hooks/usePortfolio';
 
-// import styles from "../../../styles/ProjectsTable.scss"
-
 function ProjectsTable({ projectData }) {
   const { openModal, setFormData, setEditPressed } = usePortfolioContext();
   const [confirmDialog, setConfirmDialog] = useState({
@@ -52,27 +50,26 @@ function ProjectsTable({ projectData }) {
   }
 
   return (
-    <main style={{padding: "50px"}}>
-      <Button variant="contained" onClick={() => handleOpenModal()}>
+    <main style={{padding: "32px 24px"}}>
+      <Button style={{marginBottom: "24px"}} variant="contained" onClick={() => handleOpenModal()}>
         Add Project
       </Button>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
-            <TableRow>
-              <TableCell>Title</TableCell>
+            <TableRow style={{backgroundColor: "#b1e319"}}>
+              <TableCell >Title</TableCell>
               <TableCell align="left">Description</TableCell>
               <TableCell align="left">Link</TableCell>
               <TableCell align="left">Category</TableCell>
-              <TableCell align="left">Image Key</TableCell>
-              <TableCell align="left">Action</TableCell>
+              <TableCell align="left">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {projectData.map((row) => (
               <TableRow
                 key={row.id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#f1f1f1" }}
               >
                 <TableCell component="th" scope="row">
                   {row.title}
@@ -80,7 +77,6 @@ function ProjectsTable({ projectData }) {
                 <TableCell align="left">{row.desc}</TableCell>
                 <TableCell align="left">{row.link}</TableCell>
                 <TableCell align="left">{row.category}</TableCell>
-                <TableCell align="left">{row.imageKey}</TableCell>
                 <TableCell align="left">
                   <Box sx={{ display: 'flex', gap: '5px' }}>
                     <IconButton
