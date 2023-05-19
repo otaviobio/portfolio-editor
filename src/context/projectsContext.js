@@ -15,7 +15,6 @@ export const PortfolioContextProvider = ({ children }) => {
     desc: "",
     link: "",
     category: "",
-    imageKey: "",
     mainImage: "",
     hoverImage: "",
   };
@@ -57,6 +56,7 @@ export const PortfolioContextProvider = ({ children }) => {
         setDroppedImage,
         droppedHoverImage,
         setDroppedHoverImage,
+        initialData
       }}
     >
       {children}

@@ -22,9 +22,12 @@ img {
 
 h1,
 h2,
+h3,
+h3,
 p,
 ul {
   margin: 0;
+  color: #36454F;
 }
 
 ul {

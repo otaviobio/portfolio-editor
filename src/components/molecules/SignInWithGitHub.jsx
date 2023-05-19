@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Box, Typography } from "@mui/material";
+import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 
 const SignInWithGitHub = ({ onSignIn }) => {
   return (
@@ -22,12 +23,13 @@ const SignInWithGitHub = ({ onSignIn }) => {
           variant="contained"
           fullWidth
           onClick={onSignIn}
+          endIcon={<VpnKeyOutlinedIcon />}
           sx={{
             color: "#b1e319",
-            backgroundColor: "#202121",
+            backgroundColor: "#36454F",
             ":hover": {
               bgcolor: "#b1e319",
-              color: "#202121",
+              color: "#36454F",
             },
           }}
         >

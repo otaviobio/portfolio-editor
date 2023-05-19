@@ -8,11 +8,11 @@ export function usePortfolio() {
   const supabase = useSupabaseClient();
 
   const addProject = async (formData) => {
-    const { title, desc, link, category, imageKey } = formData;
+    const { title, desc, link, category } = formData;
 
     const { data, error } = await supabase
       .from("projects")
-      .insert({ title, desc, link, category, imageKey });
+      .insert({ title, desc, link, category });
 
     if (error) {
       console.error(error);

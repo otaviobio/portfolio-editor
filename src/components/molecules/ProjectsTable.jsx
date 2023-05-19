@@ -51,31 +51,43 @@ function ProjectsTable({ projectData }) {
 
   return (
     <main style={{padding: "32px 24px"}}>
-      <Button style={{marginBottom: "24px"}} variant="contained" onClick={() => handleOpenModal()}>
+      <Button
+        style={{marginBottom: "32px"}}
+        variant="contained"
+        onClick={() => handleOpenModal()}
+        sx={{
+          color: "#b1e319",
+          backgroundColor: "#36454F",
+          ":hover": {
+            bgcolor: "#b1e319",
+            color: "#36454F",
+          },
+        }}
+      >
         Add Project
       </Button>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow style={{backgroundColor: "#b1e319"}}>
-              <TableCell >Title</TableCell>
-              <TableCell align="left">Description</TableCell>
-              <TableCell align="left">Link</TableCell>
-              <TableCell align="left">Category</TableCell>
-              <TableCell align="left">Actions</TableCell>
+              <TableCell align="left"><h3>Title</h3></TableCell>
+              <TableCell align="left"><h3>Description</h3></TableCell>
+              <TableCell align="left"><h3>Link</h3></TableCell>
+              <TableCell align="left"><h3>Category</h3></TableCell>
+              <TableCell align="left"><h3>Actions</h3></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {projectData.map((row) => (
               <TableRow
                 key={row.id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#f1f1f1" }}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 }, backgroundColor: "#f4f4f4" }}
               >
                 <TableCell component="th" scope="row">
                   {row.title}
                 </TableCell>
                 <TableCell align="left">{row.desc}</TableCell>
-                <TableCell align="left">{row.link}</TableCell>
+                <TableCell align="left"><a href={row.link} target='_blank'>{row.link}</a></TableCell>
                 <TableCell align="left">{row.category}</TableCell>
                 <TableCell align="left">
                   <Box sx={{ display: 'flex', gap: '5px' }}>
@@ -117,7 +129,7 @@ function ProjectsTable({ projectData }) {
           <Button
             disabled={isLoading}
             variant="contained"
-            color="primary"
+            color="secondary"
             onClick={() =>
               setConfirmDialog({ isOpen: false, selectedId: null })
             }

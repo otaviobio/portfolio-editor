@@ -5,7 +5,7 @@ export function useRefreshServerSideData() {
   const router = useRouter(); 
 
   function refreshData() {
-    router.replace(router.asPath)
+    router.reload();
   };
 
   return refreshData;

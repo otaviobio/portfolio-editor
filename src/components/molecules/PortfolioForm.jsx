@@ -6,11 +6,12 @@ import {
   DialogActions,
   TextField,
   Box,
-} from '@mui/material';
-import { usePortfolioContext } from '../../context/projectsContext';
-import { usePortfolio } from '../../hooks/usePortfolio';
-import { useDropzone } from 'react-dropzone';
-import { v4 as uuidv4 } from 'uuid';
+} from "@mui/material";
+import { usePortfolioContext } from "../../context/projectsContext";
+import { usePortfolio } from "../../hooks/usePortfolio";
+import { useDropzone } from "react-dropzone";
+import { v4 as uuidv4 } from "uuid";
+import { useState } from "react";
 
 export default function PortfolioForm() {
   const {
@@ -28,8 +29,19 @@ export default function PortfolioForm() {
 
   const { addProject, editProject, uploadToSupabase } = usePortfolio();
 
+  const [formErrors, setFormErrors] = useState({});
+  const validationErrors = {};
+
+  const validateField = (fieldName, fieldValue, errorMessages) => {
+    if (fieldValue.trim() === "") {
+      errorMessages[fieldName] = `${
+        fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
+      } is required.`;
+    }
+  };
+
   const handleFormChange = (e) => {
-    if (e.target.name === 'title') {
+    if (e.target.name === "title") {
       setFormData((prevState) => ({
         ...prevState,
         title: e.target.value,
@@ -40,16 +52,38 @@ export default function PortfolioForm() {
       ...prevState,
       [e.target.name]: e.target.value,
     }));
+    setFormErrors((prevState) => ({
+      ...prevState,
+      [e.target.name]: null,
+    }));
   };
 
   const resetForm = () => {
-    setDroppedImage('');
-    setDroppedHoverImage('');
+    setDroppedImage("");
+    setDroppedHoverImage("");
     handleClose();
     clearFormData();
   };
 
   const handleCreateProject = async () => {
+    validateField("title", formData.title, validationErrors);
+    validateField("desc", formData.desc, validationErrors);
+    validateField("link", formData.link, validationErrors);
+    validateField("category", formData.category, validationErrors);
+
+    if (droppedImage === "" && formData.mainImage.trim() === "") {
+      validationErrors.mainImage = "Main Image is required.";
+    }
+
+    if (droppedHoverImage === "" && formData.hoverImage.trim() === "") {
+      validationErrors.hoverImage = "Hover Image is required.";
+    }
+
+    // If there are errors, set the formErrors state and prevent submission
+    if (Object.keys(validationErrors).length > 0) {
+      setFormErrors(validationErrors);
+      return;
+    }
     const imageKey = uuidv4();
     addProject({
       ...formData,
@@ -64,6 +98,16 @@ export default function PortfolioForm() {
   };
 
   const handleEditProject = async () => {
+    validateField("title", formData.title, validationErrors);
+    validateField("desc", formData.desc, validationErrors);
+    validateField("link", formData.link, validationErrors);
+    validateField("category", formData.category, validationErrors);
+
+    // If there are errors, set the formErrors state and prevent submission
+    if (Object.keys(validationErrors).length > 0) {
+      setFormErrors(validationErrors);
+      return;
+    }
     editProject(formData);
     uploadToSupabase([
       { name: formData.imageKey, file: droppedImage },
@@ -77,7 +121,7 @@ export default function PortfolioForm() {
 
   const { getRootProps: getRootMainProps, getInputProps: getInputMainProps } =
     useDropzone({
-      'image/*': ['.png', '.jpeg', '.jpg'],
+      "image/*": [".png", ".jpeg", ".jpg"],
       onDrop: (acceptedFile) => {
         setDroppedImage(
           Object.assign(acceptedFile[0], {
@@ -89,7 +133,7 @@ export default function PortfolioForm() {
 
   const { getRootProps: getRootHoverProps, getInputProps: getInputHoverProps } =
     useDropzone({
-      'image/*': ['.png', '.jpeg', '.jpg'],
+      "image/*": [".png", ".jpeg", ".jpg"],
       onDrop: (acceptedFile) => {
         setDroppedHoverImage(
           Object.assign(acceptedFile[0], {
@@ -105,7 +149,7 @@ export default function PortfolioForm() {
     <>
       <Dialog open={open}>
         <DialogTitle>
-          {editPressed ? 'Edit Project' : 'Add Project'}
+          {editPressed ? "Edit Project" : "Add Project"}
         </DialogTitle>
         <DialogContent>
           <form>
@@ -113,58 +157,71 @@ export default function PortfolioForm() {
               name="title"
               required
               label="Title"
+              placeholder="A brief title for this project"
               fullWidth
               margin="normal"
               value={formData.title}
               onChange={handleFormChange}
+              error={!!formErrors.title} // Check if there is an error for the "title" field
+              helperText={formErrors.title} // Display the error message for the "title" field
             />
             <TextField
               name="desc"
               required
               label="Description"
+              placeholder="How would you describe this project?"
               fullWidth
               margin="normal"
               value={formData.desc}
               onChange={handleFormChange}
+              error={!!formErrors.desc} // Check if there is an error for the "desc" field
+              helperText={formErrors.desc} // Display the error message for the "desc" field
             />
             <TextField
               name="link"
               required
               label="Link"
+              placeholder="Example: https://yourproject.com"
               fullWidth
               margin="normal"
               value={formData.link}
               onChange={handleFormChange}
+              error={!!formErrors.link} // Check if there is an error for the "link" field
+              helperText={formErrors.link} // Display the error message for the "link" field
             />
             <TextField
               name="category"
               required
               label="Category"
+              placeholder="Use only one word if possible"
               fullWidth
               margin="normal"
               value={formData.category}
               onChange={handleFormChange}
+              error={!!formErrors.category} // Check if there is an error for the "category" field
+              helperText={formErrors.category} // Display the error message for the "category" field
             />
+
             <Box
               sx={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '1rem',
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "1rem",
               }}
             >
               <Box
                 component="span"
-                sx={{ p: 2, border: '1px dashed grey' }}
-                {...getRootMainProps({ className: 'dropzone' })}
+                sx={{ p: 2, border: "1px dashed grey" }}
+                {...getRootMainProps({ className: "dropzone" })}
               >
                 <input {...getInputMainProps()} />
-                {!droppedImage.preview && formData.mainImage === '' ? (
+                {!droppedImage.preview && formData.mainImage === "" ? (
                   <>
-                    <p>
-                      Drag 'n' drop your main image here, or click to select
-                      files
+                    <p style={{ fontSize: "14px" }}>
+                      Drag 'n' drop your <strong>main</strong> image here, or
+                      click to select files.
                     </p>
-                    <h4>Accepted types: .png, .jpeg, .jpg</h4>
+                    <h5>Accepted types: .png, .jpeg, .jpg</h5>
                   </>
                 ) : (
                   <img
@@ -177,20 +234,25 @@ export default function PortfolioForm() {
                     width="100%"
                   />
                 )}
+                {formErrors.mainImage && (
+                  <p style={{ color: "red", fontSize: "14px" }}>
+                    {formErrors.mainImage}
+                  </p>
+                )}
               </Box>
               <Box
                 component="span"
-                sx={{ p: 2, border: '1px dashed grey' }}
-                {...getRootHoverProps({ className: 'dropzone' })}
+                sx={{ p: 2, border: "1px dashed grey" }}
+                {...getRootHoverProps({ className: "dropzone" })}
               >
                 <input {...getInputHoverProps()} />
-                {!droppedHoverImage.preview && formData.hoverImage === '' ? (
+                {!droppedHoverImage.preview && formData.hoverImage === "" ? (
                   <>
-                    <p>
-                      Drag 'n' drop your hover image here, or click to select
-                      files
+                    <p style={{ fontSize: "14px" }}>
+                      Drag 'n' drop your <strong>hover</strong> image here, or
+                      click to select files.
                     </p>
-                    <h4>Accepted types: .png, .jpeg, .jpg</h4>
+                    <h5>Accepted types: .png, .jpeg, .jpg</h5>
                   </>
                 ) : (
                   <img
@@ -203,18 +265,33 @@ export default function PortfolioForm() {
                     width="100%"
                   />
                 )}
+                {formErrors.hoverImage && (
+                  <p style={{ color: "red", fontSize: "14px" }}>
+                    {formErrors.hoverImage}
+                  </p>
+                )}
               </Box>
             </Box>
           </form>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => handleClose()}>Cancel</Button>
+        <DialogActions style={{ marginRight: "16px", marginBottom: "16px" }}>
           <Button
+            variant="outlined"
+            size="small"
+            color="secondary"
+            onClick={() => handleClose()}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="outlined"
+            size="small"
             onClick={() =>
               editPressed ? handleEditProject() : handleCreateProject()
             }
+            color={editPressed ? "warning" : "success"}
           >
-            {editPressed ? 'Edit' : 'Add'}
+            {editPressed ? "Edit" : "Add"}
           </Button>
         </DialogActions>
       </Dialog>
